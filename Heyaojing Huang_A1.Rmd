@@ -16,7 +16,7 @@ library(zoo)
 
 Time window: From the first quarter of 2017 to the second quarter of 2021
 
-*1 kBtu=3.412 KWH; 1 kBtu=3.412 KWH
+*1 kBtu=3.412 KWH; 1 kBtu=100.00039 THM
 
 ### 1.1 Monthly total kBTUs of residential electricity and gas consumption for the entire PG&E territory 
 ```{r, include=TRUE}
