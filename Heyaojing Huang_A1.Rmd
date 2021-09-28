@@ -1,26 +1,24 @@
 ---
-title: "assignment1_Sep27"
+title: "Heyaojing Huang-Assignment1"
 output: html_document
 ---
-
+Last modified time:
+`r format(Sys.Date(), '%B %d, %Y')`
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
+knitr::opts_chunk$set(echo = F, warning = F, message = F)
 ```
 ```{r}
 library(tidyverse)
 library(plotly)
 library(zoo)
 ```
-
-### 6. Publish all of this work in a GitHub webpage titled “yourname_A1” (using the steps from Chapter 1.4). For this assignment, a support script is available by request from the TAs.
-
 ## 1 Create bar charts
 
 ### 1.1 Read files related to electricity consumption
 
 Time window: From the first quarter of 2017 to the second quarter of 2021
 
-```{r}
+```{r, include=TRUE}
 years <- 2017:2021
 quarters <- 1:4
 i=1
@@ -39,7 +37,7 @@ for (year in years){
       type,
       "UsageByZip.csv"
     )
-    print(filename)
+    #print(filename)
     if((quarter>=3)&&(year==2021)){
       next;
       }
@@ -57,7 +55,7 @@ for (year in years){
 
 Time window: From the first quarter of 2017 to the second quarter of 2021
 
-```{r}
+```{r, include=FALSE}
 years <- 2017:2021
 quarters <- 1:4
 i=1
@@ -76,7 +74,7 @@ for (year in years){
       type,
       "UsageByZip.csv"
     )
-    print(filename)
+    #print(filename)
     if((quarter>=3)&&(year==2021)){
       next;
       }
@@ -154,7 +152,7 @@ pge_final_gas_Residential
 
 (2) Take kBtu as the unit for statistics.
 
-```{r}
+```{r,include=F}
 pge_final_GasAndElec_Residential<-
   merge(pge_final_gas_Residential,pge_final_elec_Residential,by=c("YEAR","MONTH","Time"))
   arrange(pge_final_GasAndElec_Residential,pge_final_GasAndElec_Residential$YEAR,pge_final_GasAndElec_Residential$MONTH)
@@ -199,12 +197,11 @@ plot_ly() %>%
   ) %>% 
   config(displayModeBar = F)
 ```
-
 ### 1.7  Create bar charts showing monthly total kBTUs of commercial electricity and gas consumption for the entire PG&E territory 
 
-Time window: from the first quarter of 2017 to the second quarter of 2021
+(The operation steps are almost the same as 1.1-1.6, and replace 'residential' with 'commercial'.)
 
-* The operation steps are almost the same as 1.1-1.6, and replace 'residential' with 'commercial'.
+Time window: from the first quarter of 2017 to the second quarter of 2021
 
 ```{r}
 pge_final_elec_Commercial <-
@@ -230,7 +227,7 @@ pge_final_elec_Commercial <-
     Commercial_Electric_kBtu=3.412*TOTALKWH,
     Time=as.Date(as.yearmon(paste0(YEAR,'-',MONTH)))
   )
-pge_final_elec_Commercial
+#pge_final_elec_Commercial
 
 
 pge_final_gas_Commercial <-
@@ -256,14 +253,18 @@ pge_final_gas_Commercial <-
       Commercial_Gas_kBtu=100.00039*TOTALTHM,
       Time=as.Date(as.yearmon(paste0(YEAR,'-',MONTH)))
     )
-pge_final_gas_Commercial
+#pge_final_gas_Commercial
+```
 
 
+```{r,include=F}
 pge_final_GasAndElec_Commercial<-
   merge(pge_final_gas_Commercial,pge_final_elec_Commercial,by=c("YEAR","MONTH","Time"))
   arrange(pge_final_GasAndElec_Commercial,pge_final_GasAndElec_Commercial$YEAR,pge_final_GasAndElec_Commercial$MONTH)
+```
 
-  
+
+```{r}
 plot_ly() %>% 
   add_trace(
     data = pge_final_GasAndElec_Commercial,
@@ -303,11 +304,14 @@ plot_ly() %>%
 
 ### 2.1 Calculate the ratio of commercial to residential energy consumption
 
-```{r}
+```{r,include=F}
 pge_analysis_covid<-
   merge(pge_final_GasAndElec_Residential,pge_final_GasAndElec_Commercial,by=c("YEAR","MONTH","Time"))
   arrange(pge_analysis_covid,pge_analysis_covid$YEAR,pge_analysis_covid$MONTH)
+```
 
+
+```{r}
 pge_combined_analysis_covid <-
   pge_analysis_covid %>% 
   select(
@@ -337,10 +341,14 @@ pge_combined_analysis_covid <-
       Residential_Electric_kBtu/
       Commercial_Electric_kBtu,
     )
-  
+```
+
+
+```{r,include=F}
 pge_combined_analysis_covid<-
   arrange(pge_combined_analysis_covid,pge_combined_analysis_covid$YEAR,pge_combined_analysis_covid$MONTH)
 ```
+
 ```{r}
 plot_ly(pge_combined_analysis_covid,
         x = ~as.Date(Time),
@@ -351,8 +359,10 @@ plot_ly(pge_combined_analysis_covid,
   add_trace(x =as.Date("2020-3-11"),type = 'scatter', mode = 'lines',
             line = list(color = 'red'),name = 'Date of COVID-19 pandemic began according to WHO') %>%
   layout(
-    #legend = list(title = list(text = "Description")),
-    title = "Ratio of commercial to residential energy consumption from 2017Q1 to 2021Q2", 
+    legend = list(
+      font = list(size = 8),
+      x=0.05,y=1),
+    title = "Ratio of commercial to residential energy consumption", 
     xaxis = list(
       title = "Month/Year",
       fixedrange = T,
@@ -375,12 +385,14 @@ plot_ly(pge_combined_analysis_covid,
         x = ~as.Date(Time),
         y = ~total_gas_residentialAndcommercial,
         type = "bar",
-        name = "total gas consumption - residential and commercial") %>% 
+        name = "total residential and commercial gas consumption") %>% 
   add_trace(x =as.Date("2020-3-11"),type = 'scatter', mode = 'lines',
             line = list(color = 'red'),name = 'Date of COVID-19 pandemic began according to WHO') %>%
   layout(
-    #legend = list(title = list(text = "Description")),
-    title = "total gas consumption - residential and commercial - from 2017Q1 to 2021Q2", 
+    legend = list(
+      font = list(size = 8),
+      x=0.6,y=0.99),
+    title = "total residential and commercial gas consumption", 
     xaxis = list(
       title = "Month/Year",
       fixedrange = T,
@@ -400,12 +412,14 @@ plot_ly(pge_combined_analysis_covid,
         x = ~as.Date(Time),
         y = ~total_electric_residentialAndcommercial,
         type = "bar",
-        name = "total electricity consumption - residential and commercial") %>% 
+        name = "total residential and commercial electricity consumption") %>% 
   add_trace(x =as.Date("2020-3-11"),type = 'scatter', mode = 'lines',
             line = list(color = 'red'),name = 'Date of COVID-19 pandemic began according to WHO') %>%
   layout(
-    #legend = list(title = list(text = "Description")),
-    title = "total electricity consumption - residential and commercial - from 2017Q1 to 2021Q2", 
+    legend = list(
+      font = list(size = 8),
+      x=0.1,y=0.99),
+    title = "total residential and commercial electricity consumption", 
     xaxis = list(
       title = "Month/Year",
       fixedrange = T,
@@ -420,13 +434,16 @@ plot_ly(pge_combined_analysis_covid,
   ) %>% 
   config(displayModeBar = F)
 ```
-
 ### 2.2 Comment on observable changes in energy consumption that may be attributable to the COVID-19 pandemic
 
-(1) In the chart "Ratio of commercial to residential energy consumption", I used the red line to mark the time when WHO declared a pandemic (according to WHO). It can be seen that after this time point, the ratio of commercial energy consumption to residential energy consumption has dropped significantly. This is in line with our perception that due to the epidemic, people spend more time at home instead of in commercial buildings.
+#### Comment 1
+    In the chart "Ratio of commercial to residential energy consumption", I used the red line to mark the time when WHO declared a pandemic (according to WHO). It can be seen that after this time point, the ratio of commercial energy consumption to residential energy consumption has dropped significantly. This is in line with our perception that due to the epidemic, people spend more time at home instead of in commercial buildings.
 
-(2) Starting from the first quarter of 2021, the ratio of commercial energy consumption to residential energy consumption has rebounded significantly. This may be due to the liberalization of restrictions on the COVID-19 in various regions. The implementation of the epidemic control  policy is no longer that mandatory. More people choose to return to commercial buildings. As of the second quarter of 2021, this ratio is basically the same as the second quarter of 2019. Compared with the same period before the pandemic, there was even a slight improvement.
+#### Comment 2
+    Starting from the first quarter of 2021, the ratio of commercial energy consumption to residential energy consumption has rebounded significantly. This may be due to the liberalization of restrictions on the COVID-19 in various regions. The implementation of the epidemic control  policy is no longer that mandatory. More people choose to return to commercial buildings. As of the second quarter of 2021, this ratio is basically the same as the second quarter of 2019. Compared with the same period before the pandemic, there was even a slight improvement.
 
-(3) According to the chart "total gas consumption - residential and commercial", since the first quarter of 2017, the gas consumption of commercial and residential buildings has been showing a downward trend. However, after the outbreak of the epidemic, this downward trend no longer continued, and the total gas consumption increased.
+#### Comment 3
+    According to the chart "total gas consumption - residential and commercial", since the first quarter of 2017, the gas consumption of commercial and residential buildings has been showing a downward trend. However, after the outbreak of the epidemic, this downward trend no longer continued, and the total gas consumption increased.
 
-(4) According to the chart "total electricity consumption - residential and commercial", since the outbreak of the epidemic, total electricity consumption has risen significantly. This may be due to the significant increase in the amount of time people spend indoors during the epidemic, and the decrease in outdoor activities, leading to an increase in electricity consumption. Starting from the first quarter of 2021, such high-level electricity consumption has dropped again. This may be because the impact of the epidemic on people's normal lives has been significantly reduced, and the total electricity consumption has basically fallen to the level before the epidemic.
+#### Comment 4
+    According to the chart "total electricity consumption - residential and commercial", since the outbreak of the epidemic, total electricity consumption has risen significantly. This may be due to the significant increase in the amount of time people spend indoors during the epidemic, and the decrease in outdoor activities, leading to an increase in electricity consumption. Starting from the first quarter of 2021, such high-level electricity consumption has dropped again. This may be because the impact of the epidemic on people's normal lives has been significantly reduced, and the total electricity consumption has basically fallen to the level before the epidemic.
