@@ -199,8 +199,6 @@ plot_ly() %>%
 ```
 ### 1.7  Create bar charts showing monthly total kBTUs of commercial electricity and gas consumption for the entire PG&E territory 
 
-(The operation steps are almost the same as 1.1-1.6, and replace 'residential' with 'commercial'.)
-
 Time window: from the first quarter of 2017 to the second quarter of 2021
 
 ```{r}
@@ -302,7 +300,7 @@ plot_ly() %>%
 ```
 ## 2 Analysis of observable changes 
 
-### 2.1 Calculate the ratio of commercial to residential energy consumption
+### 2.1 Propose hypotheses and verification plan
 
 ```{r,include=F}
 pge_analysis_covid<-
@@ -310,7 +308,27 @@ pge_analysis_covid<-
   arrange(pge_analysis_covid,pge_analysis_covid$YEAR,pge_analysis_covid$MONTH)
 ```
 
+In this part, a series of necessary indicators are established. 
 
+In order to conduct cross-analysis between data, I proposed a total of 7 Hypotheses and drew charts of them separately for observation and verification.
+
+Hypothesis 1: The epidemic has an impact on the total commercial energy consumption;
+Hypothesis 2: The epidemic has an impact on the total residential energy consumption;
+Hypothesis 3: The epidemic has an impact on the ratio of residential and commercial energy consumption;
+Hypothesis 4: The epidemic has an impact on the ratio of gas consumption to electricity consumption ( commercial);
+Hypothesis 5: The epidemic has an impact on the ratio of gas consumption to electricity consumption ( residential);
+Hypothesis 6: The epidemic has an impact on total gas consumption;
+Hypothesis 7: The epidemic has an impact on total electricity consumption
+
+For the above seven hypotheses, I added 7 indicators to describe these them separately.
+
+However, by observing the drawn charts, I personally think that only the following three hypotheses are significantly established. (This does not mean that other hypotheses are completely untenable, but to a certain extent, no definite conclusion can be drawn based on the current data and analysis.)
+
+Hypothesis 3: The epidemic has an impact on the ratio of residential and commercial energy consumption;
+Hypothesis 6: The epidemic has an impact on total gas consumption;
+Hypothesis 7: The epidemic has an impact on total electricity consumption
+
+Charts and analysis are as follows:
 ```{r}
 pge_combined_analysis_covid <-
   pge_analysis_covid %>% 
@@ -443,7 +461,7 @@ plot_ly(pge_combined_analysis_covid,
     Starting from the first quarter of 2021, the ratio of commercial energy consumption to residential energy consumption has rebounded significantly. This may be due to the liberalization of restrictions on the COVID-19 in various regions. The implementation of the epidemic control  policy is no longer that mandatory. More people choose to return to commercial buildings. As of the second quarter of 2021, this ratio is basically the same as the second quarter of 2019. Compared with the same period before the pandemic, there was even a slight improvement.
 
 #### Comment 3
-    According to the chart "total gas consumption - residential and commercial", since the first quarter of 2017, the gas consumption of commercial and residential buildings has been showing a downward trend. However, after the outbreak of the epidemic, this downward trend no longer continued, and the total gas consumption increased.
+    According to the chart "total residential and commercial gas consumption", since the first quarter of 2017, the gas consumption of commercial and residential buildings has been showing a downward trend. However, after the outbreak of the epidemic, this downward trend no longer continued, and the total gas consumption increased.
 
 #### Comment 4
-    According to the chart "total electricity consumption - residential and commercial", since the outbreak of the epidemic, total electricity consumption has risen significantly. This may be due to the significant increase in the amount of time people spend indoors during the epidemic, and the decrease in outdoor activities, leading to an increase in electricity consumption. Starting from the first quarter of 2021, such high-level electricity consumption has dropped again. This may be because the impact of the epidemic on people's normal lives has been significantly reduced, and the total electricity consumption has basically fallen to the level before the epidemic.
+    According to the chart "total residential and commercial electricity consumption", since the outbreak of the epidemic, total electricity consumption has risen significantly. This may be due to the significant increase in the amount of time people spend indoors during the epidemic, and the decrease in outdoor activities, leading to an increase in electricity consumption. Starting from the first quarter of 2021, such high-level electricity consumption has dropped again. This may be because the impact of the epidemic on people's normal lives has been significantly reduced, and the total electricity consumption has basically fallen to the level before the epidemic.
